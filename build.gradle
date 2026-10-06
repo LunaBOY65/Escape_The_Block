@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'com.escapetheblock'
+version = '1.0.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Pure Java SE Swing application
+}
+
+application {
+    mainClass = 'com.escapetheblock.GameStart'
+}
+
+jar {
+    manifest {
+        attributes(
+            'Main-Class': 'com.escapetheblock.GameStart',
+            'Implementation-Title': 'Escape the Block',
+            'Implementation-Version': project.version
+        )
+    }
+}

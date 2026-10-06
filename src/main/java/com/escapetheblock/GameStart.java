@@ -1,3 +1,4 @@
+package com.escapetheblock;
 
 import javax.swing.JFrame;
 
@@ -19,7 +20,7 @@ public class GameStart extends javax.swing.JFrame {
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setLocationByPlatform(true);
         setPreferredSize(new java.awt.Dimension(600, 600));
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        getContentPane().setLayout(null);
 
         jButton1.setBackground(new java.awt.Color(0, 0, 0));
         jButton1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -32,24 +33,26 @@ public class GameStart extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 350, 260, 80));
+        jButton1.setBounds(170, 350, 260, 80);
+        getContentPane().add(jButton1);
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/as.png"))); // NOI18N
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 600, 600));
+        java.net.URL imgUrl = getClass().getResource("/Image/as.png");
+        if (imgUrl != null) {
+            jLabel3.setIcon(new javax.swing.ImageIcon(imgUrl)); // NOI18N
+        }
+        jLabel3.setBounds(0, 0, 600, 600);
+        getContentPane().add(jLabel3);
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        flee fl = new flee();              
+        new flee();              
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     public static void main(String args[]) {
-        //frame.setVisible(true);
-
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new GameStart().setVisible(true);
