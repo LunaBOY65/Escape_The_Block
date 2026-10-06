@@ -1,51 +1,47 @@
 package com.escapetheblock;
 
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
-public class Mouse implements MouseListener, MouseMotionListener {
+/**
+ * Adapts Swing mouse events into the small input state the game model needs.
+ */
+public class Mouse extends MouseAdapter {
+    private int x = -1;
+    private int y = -1;
+    private boolean dragging;
 
-	public static int mouseX = -1;
-	public static int mouseY = -1;
-	public static boolean dragged = false;
-	
-	public static int getX(){
-		return mouseX;
-	}
-	
-	public static int getY(){
-		return mouseY;
-	}
-	
-	public void mouseDragged(MouseEvent e) {
-		mouseX = e.getX();
-		mouseY = e.getY();
-		dragged = true;
-	}
+    public int getX() {
+        return x;
+    }
 
-	public void mouseMoved(MouseEvent e) {
-	}
+    public int getY() {
+        return y;
+    }
 
-	public void mouseClicked(MouseEvent e) {
-	}
+    public boolean isDragging() {
+        return dragging;
+    }
 
-	public void mouseEntered(MouseEvent e) {
-		
-	}
+    @Override
+    public void mousePressed(MouseEvent event) {
+        updatePosition(event);
+        dragging = true;
+    }
 
-	public void mouseExited(MouseEvent e) {
-		
-	}
+    @Override
+    public void mouseDragged(MouseEvent event) {
+        updatePosition(event);
+    }
 
-	public void mousePressed(MouseEvent e) {
-		dragged = true;
-		mouseX = e.getX();
-		mouseY = e.getY();
-	}
+    @Override
+    public void mouseReleased(MouseEvent event) {
+        updatePosition(event);
+        dragging = false;
+    }
 
-	public void mouseReleased(MouseEvent e) {
-		dragged = false;               
-	}
-	
+    private void updatePosition(MouseEvent event) {
+        x = event.getX();
+        y = event.getY();
+    }
 }

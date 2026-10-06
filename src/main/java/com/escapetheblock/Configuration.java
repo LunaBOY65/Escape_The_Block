@@ -1,49 +1,62 @@
 package com.escapetheblock;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Properties;
 
+/**
+ * Reads and writes the best time without knowing about the game window or UI.
+ */
 public class Configuration {
-	
-	Properties propeties = new Properties();
+    private static final String BEST_TIME_KEY = "best";
+    private static final double DEFAULT_BEST_TIME_SECONDS = 3.0;
 
-	public void saveConfiguration(String key, double value) {
-		String path = "config.xml";
-		try {
-			File file = new File(path);
-			boolean exist = file.exists();
-			if(!exist) {
-				file.createNewFile();
-			}
-			OutputStream write = new FileOutputStream(path);
-			propeties.setProperty(key, Double.toString(value));
-			propeties.storeToXML(write, "Options");
-		}catch(Exception e) {}	
-	}
-	
-	public void loadConfiguration(String path) {
-		try {
-			InputStream read = new FileInputStream(path);
-			propeties.loadFromXML(read);
-			String best = propeties.getProperty("best");
-			setBest(Double.parseDouble(best));
-			read.close();
-		}catch(FileNotFoundException e) {
-			saveConfiguration("best", 3.0);
-			loadConfiguration(path);
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-	}
+    private final Path file;
 
-	public void setBest(double bestTime) {
-		flee.best = bestTime;
-	}
-	
+    public Configuration() {
+        this(Path.of("config.xml"));
+    }
+
+    public Configuration(Path file) {
+        this.file = file;
+    }
+
+    public double loadBestTime() throws IOException {
+        if (Files.notExists(file)) {
+            saveBestTime(DEFAULT_BEST_TIME_SECONDS);
+            return DEFAULT_BEST_TIME_SECONDS;
+        }
+
+        Properties properties = new Properties();
+        try (InputStream input = Files.newInputStream(file)) {
+            properties.loadFromXML(input);
+        }
+
+        String value = properties.getProperty(BEST_TIME_KEY);
+        if (value == null) {
+            throw new IOException("Missing '" + BEST_TIME_KEY + "' value in " + file);
+        }
+
+        double bestTime;
+        try {
+            bestTime = Double.parseDouble(value);
+        } catch (NumberFormatException exception) {
+            throw new IOException("Invalid best time in " + file, exception);
+        }
+        if (!Double.isFinite(bestTime) || bestTime < 0) {
+            throw new IOException("Best time must be a finite, non-negative number in " + file);
+        }
+        return bestTime;
+    }
+
+    public void saveBestTime(double bestTimeSeconds) throws IOException {
+        Properties properties = new Properties();
+        properties.setProperty(BEST_TIME_KEY, Double.toString(bestTimeSeconds));
+        try (OutputStream output = Files.newOutputStream(file)) {
+            properties.storeToXML(output, "Escape the Block options");
+        }
+    }
 }

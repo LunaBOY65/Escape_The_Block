@@ -1,6 +1,7 @@
 package com.escapetheblock;
 
-import javax.swing.JFrame;
+import java.io.IOException;
+import javax.swing.JOptionPane;
 
 public class GameStart extends javax.swing.JFrame {
 
@@ -48,8 +49,16 @@ public class GameStart extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        new flee();              
-        dispose();
+        try {
+            new Game();
+            dispose();
+        } catch (IOException exception) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Could not load the game configuration: " + exception.getMessage(),
+                    "Configuration error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     public static void main(String args[]) {
